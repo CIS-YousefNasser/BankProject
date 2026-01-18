@@ -212,7 +212,7 @@ void UpdateClientData(stClient& clientData) {
 	clientData.accountBalance = ReadDouble("account Balance:");
 
 }
-void UpdateClientInFile(std::vector<stClient>& client, const std::string& delimiter, const std::string& directory) {
+void SaveClientsChanges(std::vector<stClient>& client, const std::string& delimiter, const std::string& directory) {
 	std::string line = "";
 	std::ofstream file;
 	file.open(directory, std::ios::out);
@@ -300,12 +300,12 @@ void DeleteClient(const std::string& targetUsername, const std::string& usersDir
 	std::cout << std::endl;
 	if (CheckClientByAccountNumber(targetUsername, usersDirectory, delimiter, searchedForClient, clientsData)) {
 		PrintClientData(searchedForClient);
-		std::cout << "Are You sure you Want to Delete This Client (i think he is pretty cool)" << std::endl;
+		std::cout << "Are You sure you Want to Delete This Client (y/n):" << std::endl;
 		std::cin >> areYouSure;
 		if (std::tolower(areYouSure) == 'y')
 		{
 			MarkClientForDeletion(targetUsername, usersDirectory, delimiter, clientsData);
-			UpdateClientInFile(clientsData, delimiter, usersDirectory);
+			SaveClientsChanges(clientsData, delimiter, usersDirectory);
 			clientsData = LoadDataFromFile(usersDirectory, delimiter);
 			std::cout << "Deletion Complete" << std::endl;
 
@@ -330,7 +330,7 @@ void UpdateClient(const std::string& targetAccountNumber, const std::string& dir
 		if (std::tolower(areYouSure) == 'y')
 		{
 			MarkClientForUpdate(targetAccountNumber, clientsData);
-			UpdateClientInFile(clientsData, delimiter, directory);
+			SaveClientsChanges(clientsData, delimiter, directory);
 			clientsData = LoadDataFromFile(directory, delimiter);
 			std::cout << "Update Complete" << std::endl;
 
@@ -573,7 +573,7 @@ void UpdateUserData(stUser& user) {
 
 }
 
-void UpdateUserInFile(std::vector<stUser>& usersData, const std::string& delimiter, const std::string& usersDirectory) {
+void SaveUsersChanges(std::vector<stUser>& usersData, const std::string& delimiter, const std::string& usersDirectory) {
 	std::string line = "";
 	std::ofstream file;
 	file.open(usersDirectory, std::ios::out);
@@ -616,7 +616,7 @@ void UpdateUser(const std::string& targetUsername, const std::string& usersDirec
 		if (std::tolower(areYouSure) == 'y')
 		{
 			MarkUserForUpdate(targetUsername, usersData);
-			UpdateUserInFile(usersData, delimiter, usersDirectory);
+			SaveUsersChanges(usersData, delimiter, usersDirectory);
 			usersData = LoadUserDataFromFile(usersDirectory, delimiter);
 			std::cout << "Update Complete" << std::endl;
 
@@ -660,12 +660,12 @@ void DeleteUser(const std::string& targetUsername, const std::string& usersDirec
 		}
 		else {
 			PrintUserData(searchedforUser);
-			std::cout << "Are You sure you Want to Delete This User (i think he is pretty cool) y/n:";
+			std::cout << "Are You sure you Want to Delete This User  (y/n):";
 			std::cin >> areYouSure;
 			if (std::tolower(areYouSure) == 'y')
 			{
 				MarkUserForDeletion(targetUsername, usersDirectory, delimiter, usersData);
-				UpdateUserInFile(usersData, delimiter, usersDirectory);
+				SaveUsersChanges(usersData, delimiter, usersDirectory);
 				usersData = LoadUserDataFromFile(usersDirectory, delimiter);
 				std::cout << "Deletion Complete" << std::endl;
 
@@ -716,7 +716,7 @@ void InvalidScreen() {
 	std::cout << "----------------------------------------------------" << std::endl;
 }
 stUser Login(const std::string& usersDirectory, const std::string& delimiter, std::vector<stUser>& usersData) {
-	std::cout << "Admin username:admin,password:1233" << std::endl;
+	std::cout << "Admin username:Admin,password:1233" << std::endl;
 	LoginScreen();
 	stUser loginAttempt = ReadUserData();
 
@@ -771,7 +771,7 @@ bool DepositOption(std::vector<stClient>& clientsData, const std::string& target
 		{
 			PrintClientData(client);
 			client.accountBalance = client.accountBalance + AmountToDeposit("How much to deposit:");
-			UpdateClientInFile(clientsData, delimiter, directory);
+			SaveClientsChanges(clientsData, delimiter, directory);
 			return true;
 		}
 	}
@@ -796,7 +796,7 @@ bool WithDrawOption(std::vector<stClient>& clientsData, const std::string& targe
 			} while (client.accountBalance < withdrawAmount || withdrawAmount < 0);
 
 			client.accountBalance = client.accountBalance - withdrawAmount;
-			UpdateClientInFile(clientsData, delimiter, directory);
+			SaveClientsChanges(clientsData, delimiter, directory);
 			return true;
 		}
 
@@ -933,7 +933,7 @@ void MainMenuOptions(std::string& usersDirectory, std::string& clientsDirectory,
 		if (currentUser.deleteAccount == true)
 		{
 			MarkUserForDeletion(currentUser.username, usersDirectory, delimiter, usersData);
-			UpdateUserInFile(usersData, delimiter, usersDirectory);
+			SaveUsersChanges(usersData, delimiter, usersDirectory);
 			usersData = LoadUserDataFromFile(usersDirectory, delimiter);
 			system("cls");
 			std::cout << "Its sad to see you go :(" << std::endl;
@@ -1031,6 +1031,7 @@ int main()
 	srand(time(NULL));
 	std::string clientDirectory = "Clients.txt";
 	std::string usersDirectory = "Users.txt";
+	std::string delimiter = "#//#";
 
 	/*stUser admin = UserDataLineToData("Admin#//#1233#//#-1", delimiter);
 	AddUserDataToFile(usersDirectory, admin, delimiter);*/
