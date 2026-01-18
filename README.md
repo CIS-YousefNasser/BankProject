@@ -1,5 +1,5 @@
 Bank Management System
-A robust, console-based banking application built in C++. This system allows for comprehensive management of bank clients, users, and transactions, featuring a secure login system with permission controls.
+A robust, console-based banking application built in C++. This system allows for comprehensive management of bank clients, users, and transactions, featuring a login system with permission controls.
 
 Project Description
 This project allows administrators to manage bank clients and system users efficiently. It utilizes a custom file-based database for data persistence and implements a permission-based access control system, allowing the main administrator to restrict specific functionalities for different users.
