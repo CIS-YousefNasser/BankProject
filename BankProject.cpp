@@ -1031,7 +1031,6 @@ int main()
 	srand(time(NULL));
 	std::string clientDirectory = "Clients.txt";
 	std::string usersDirectory = "Users.txt";
-	std::string delimiter = "#//#";
 
 	/*stUser admin = UserDataLineToData("Admin#//#1233#//#-1", delimiter);
 	AddUserDataToFile(usersDirectory, admin, delimiter);*/
